@@ -78,11 +78,12 @@ def get_name(f, name_offset):
 
 for i in range(num_folders):
     crc = unpack(endianness + 'I', fbin.read(4))[0]
-    fbin.seek(4, 1)
+    next_neighbour_folder_id = unpack(endianness + 'I', fbin.read(4))[0]
     prev_id = unpack(endianness + 'I', fbin.read(4))[0]
     fbin.seek(4, 1)
     name_offset = unpack(endianness + 'I', fbin.read(4))[0]
-    fbin.seek(8, 1)
+    next_lower_folder_id = unpack(endianness + 'I', fbin.read(4))[0]
+    next_file_id = unpack(endianness + 'I', fbin.read(4))[0]
 
     if name_offset != 0xFFFFFFFF:
         folderName = get_name(fbin, name_offset)
@@ -112,7 +113,7 @@ pos = fbin.tell()
 
 for i in range(num_files):
     name_crc = unpack(endianness + 'I', fbin.read(4))[0]
-    unknown = unpack(endianness + 'I', fbin.read(4))[0]
+    next_neighbour_file_id = unpack(endianness + 'I', fbin.read(4))[0]
     prev_id = unpack(endianness + 'I', fbin.read(4))[0]
     flags = unpack(endianness + 'I', fbin.read(4))[0]
     name_offset = unpack(endianness + 'I', fbin.read(4))[0]
