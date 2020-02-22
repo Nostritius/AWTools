@@ -17,6 +17,7 @@
 
 import sys
 import os
+import zlib
 
 from struct import unpack
 
@@ -76,16 +77,22 @@ def get_name(f, name_offset):
 
 
 for i in range(num_folders):
-    fbin.seek(8, 1)
+    crc = unpack(endianness + 'I', fbin.read(4))[0]
+    fbin.seek(4, 1)
     prev_id = unpack(endianness + 'I', fbin.read(4))[0]
     fbin.seek(4, 1)
     name_offset = unpack(endianness + 'I', fbin.read(4))[0]
     fbin.seek(8, 1)
 
     if name_offset != 0xFFFFFFFF:
-        folderNames.append(get_name(fbin, name_offset))
+        folderName = get_name(fbin, name_offset)
     else:
-        folderNames.append("")
+        folderName = ""
+
+    if zlib.crc32(bytearray(folderName, "ascii")) != crc:
+        raise Exception("Invalid folder name crc checksum")
+
+    folderNames.append(folderName)
     prevIds.append(prev_id)
 
 for i in range(num_folders):
@@ -104,23 +111,31 @@ for i in range(num_folders):
 pos = fbin.tell()
 
 for i in range(num_files):
-    fbin.seek(8, 1)
+    name_crc = unpack(endianness + 'I', fbin.read(4))[0]
+    unknown = unpack(endianness + 'I', fbin.read(4))[0]
     prev_id = unpack(endianness + 'I', fbin.read(4))[0]
     flags = unpack(endianness + 'I', fbin.read(4))[0]
     name_offset = unpack(endianness + 'I', fbin.read(4))[0]
     offset = unpack(endianness + 'Q', fbin.read(8))[0]
     size = unpack(endianness + 'Q', fbin.read(8))[0]
-    crc = unpack(endianness + 'I', fbin.read(4))[0]
+    file_data_crc = unpack(endianness + 'I', fbin.read(4))[0]
+
+    name = get_name(fbin, name_offset)
+    full_name = folders[prev_id] + "/" + name
 
     if magic_id == 0:
         fbin.seek(8, 1)
 
-    name = get_name(fbin, name_offset)
-
-    nf = open(folders[prev_id] + "/" + name, "wb")
+    nf = open(full_name, "wb")
 
     frmdp.seek(offset)
     data = frmdp.read(size)
+
+    if zlib.crc32(bytearray(name, "ascii")) != name_crc:
+        raise Exception("Invalid file name crc checksum")
+
+    if zlib.crc32(data) != file_data_crc:
+        raise Exception("Invalid file data crc checksum")
 
     nf.write(data)
     nf.close()
