@@ -9,6 +9,7 @@ The following tools are available:
 
 * unrmdp.py unpack rmdp/bin archive structures
 * unbin.py unpack bin or resources archives
+* unobj.py unpack obj shader archives
 * bin2xml.py translate a binary data file to a readable xml file
 * binfnt2xml.py translate a binfnt file to a readable xml file and extract the font texture
 * packmeta2xml.py translate a packmeta file to a readable xml file
