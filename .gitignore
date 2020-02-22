@@ -11,6 +11,7 @@
 *.bingrs
 *.binhvk
 *.obj
+*.packmeta
 
 # Output formats
 *.fxo
