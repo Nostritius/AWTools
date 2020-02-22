@@ -1,2 +1,17 @@
 # PyCharm project files
 .idea
+
+# Alan Wake file formats
+*.rmdp
+*.bin
+*.resources
+*.collisions
+*.binmsh
+*.binhkx
+*.bingrs
+*.binhvk
+*.obj
+
+# Output formats
+*.fxo
+*.xml
