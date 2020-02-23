@@ -46,6 +46,9 @@ for i in range(numPrograms):
     f.seek(4, 1)  # Probably numShaders is intended to be 64 bit?
 
     for j in range(numShaders * 2):
+        if j % 2 == 0 and j != 0:
+            f.seek(4, 1)
+
         fileSize = unpack('I', f.read(4))[0]
 
         fxo = open(os.path.splitext(sys.argv[1])[0] + "_" + name + "_" + str(j) + ".fxo", "wb")
