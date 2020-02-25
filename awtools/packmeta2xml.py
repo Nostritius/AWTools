@@ -38,7 +38,6 @@ for i in range(num_elements):
         name += c
         c = unpack('c', f.read(1))[0].decode('ascii')
 
-    print(name)
     names.append(name)
 
 name_offsets = []
