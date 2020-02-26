@@ -10,11 +10,14 @@ The following tools are available:
 * unrmdp.py unpack rmdp/bin archive structures
 * unbin.py unpack bin or resources archives
 * unobj.py unpack obj shader archives
+* bin.py pack bin or resources archives
+* tex2tga convert tex texture to a tga image
 * bin2xml.py translate a binary data file to a readable xml file
 * binfnt2xml.py translate a binfnt file to a readable xml file and extract the font texture
 * packmeta2xml.py translate a packmeta file to a readable xml file
 * collisions2obj.py convert a collisions mesh to a Wavefront mesh file
 * string_table2xml.py convert a string table file to a readable xml file
+* xml2string_table.py pack a string table back together
 
 The tools are currently mostly tested against Alan Wakes American Nightmare. While some of them like unrmdp or unbin
 also work with the original Alan Wake. 
