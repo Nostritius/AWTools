@@ -10,6 +10,7 @@ The following tools are available:
 * unrmdp.py unpack rmdp/bin archive structures
 * unbin.py unpack bin or resources archives
 * unobj.py unpack obj shader archives
+* rmdp.py pack rmdp/bin archive structures
 * bin.py pack bin or resources archives
 * tex2tga convert tex texture to a tga image
 * bin2xml.py translate a binary data file to a readable xml file
