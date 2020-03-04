@@ -132,7 +132,7 @@ for i in range(num_files):
     frmdp.seek(offset)
     data = frmdp.read(size)
 
-    if zlib.crc32(bytearray(name, "ascii")) != name_crc:
+    if zlib.crc32(bytearray(name.lower(), "ascii")) != name_crc:
         raise Exception("Invalid file name crc checksum")
 
     if zlib.crc32(data) != file_data_crc:
