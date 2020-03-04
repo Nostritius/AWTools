@@ -177,8 +177,11 @@ for file in file_entries:
     f = open(file.path, "rb")
     data = f.read()
 
-    fbin.write(pack('Q', frmdp.tell()))
-    fbin.write(pack('Q', len(data)))
+    offset = frmdp.tell()
+    size = len(data)
+
+    fbin.write(pack('Q', offset))
+    fbin.write(pack('Q', size))
 
     fbin.write(pack('I', zlib.crc32(data)))
 
