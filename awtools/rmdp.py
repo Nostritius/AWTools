@@ -168,7 +168,7 @@ for folder in folder_entries:
     fbin.write(pack('I', folder.next_file))
 
 for file in file_entries:
-    fbin.write(pack('I', zlib.crc32(bytearray(file.name, "ascii"))))
+    fbin.write(pack('I', zlib.crc32(bytearray(file.name.lower(), "ascii"))))
     fbin.write(pack('I', file.next_file))
     fbin.write(pack('I', file.prev_folder))
     fbin.write(pack('I', 0))
