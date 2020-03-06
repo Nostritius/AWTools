@@ -46,10 +46,10 @@ f.seek(0, 2)
 file_size = f.tell()
 f.seek(0)
 
-magic_id = unpack('I', f.read(4))[0] # ?
+magic_id = unpack('I', f.read(4))[0]  # ?
 unknown1 = unpack('I', f.read(4))[0]
 num_elements = unpack('I', f.read(4))[0]
-unknown2 = unpack('I', f.read(4))[0]
+unknown2 = unpack('I', f.read(4))[0]  # Always 0?
 
 root_node = ET.Element("data")
 
