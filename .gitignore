@@ -10,8 +10,11 @@
 *.binhkx
 *.bingrs
 *.binhvk
+*.bincloth
 *.obj
 *.packmeta
+*.tex
+*.meta
 
 # Output formats
 *.fxo
