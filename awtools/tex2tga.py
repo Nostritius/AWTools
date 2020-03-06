@@ -23,8 +23,9 @@ import copy
 from struct import unpack, pack
 
 class Format(enum.Enum):
+    RGBA8_LUT = 0
     RGBA_DXT1 = 5
-    RGBA8888 = 6
+    RGBA8 = 6
     RGBA_DXT3 = 7
     RGBA_DXT5 = 9
 
