@@ -119,7 +119,7 @@ for i in range(num_files):
     name_offset = unpack(endianness + 'I', fbin.read(4))[0]
     offset = unpack(endianness + 'Q', fbin.read(8))[0]
     size = unpack(endianness + 'Q', fbin.read(8))[0]
-    file_data_crc = unpack(endianness + 'I', fbin.read(4))[0]
+    file_data_crc = unpack('<I', fbin.read(4))[0]
 
     name = get_name(fbin, name_offset)
     full_name = folders[prev_id] + "/" + name
