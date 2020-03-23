@@ -28,6 +28,8 @@ class DataType(enum.Enum):
     RID = 0x00000018
     FILE_INFO = 0x00000020
     CELL_INFO = 0x00000024
+    SKELETON_SETUP_INFO = 0x00000027
+    SKELETON_INFO = 0x0000003C
     TEXTURE_METADATA = 0x0000006D
     STATIC_OBJECT = 0x00000089
 
@@ -111,6 +113,22 @@ def write_transform(f, node):
     rotation_node2.set("unknown1", str(math.degrees(unknown2)))
     rotation_node2.set("unknown2", str(math.degrees(unknown3)))
 
+def write_skeleton(f, node):
+    skeleton_node = ET.SubElement(node, "skeleton")
+
+    type = unpack(">I", f.read(4))[0]
+
+    unknown1 = unpack("I", f.read(4))[0]
+    unknown2 = unpack("I", f.read(4))[0]
+
+    skeleton_node.set("unknown1", str(unknown1))
+    skeleton_node.set("unknown2", str(unknown2))
+
+    f.seek(8, 1)
+
+    write_struct(f, skeleton_node, True)
+    write_struct(f, skeleton_node, True)
+
 
 def write_rid(f, node):
     rid_node = ET.SubElement(node, "rid")
@@ -151,13 +169,20 @@ def write_static_object(f, node):
 def write_struct(f, node, substruct=False):
     begin_marker = unpack('>I', f.read(4))[0]
 
-    t = DataType(unpack('I', f.read(4))[0])
+    type = unpack('I', f.read(4))[0]
+
+    if type not in DataType._value2member_map_:
+        t = DataType.EMPTY
+    else:
+        t = DataType(type)
 
     strct_node = ET.SubElement(node, "struct")
     strct_node.set("type", t.name)
 
     if t == DataType.CELL_INFO:
         write_cell_info(f, strct_node)
+    elif t == DataType.SKELETON_INFO:
+        write_skeleton(f, strct_node)
     elif t == DataType.STATIC_OBJECT:
         write_static_object(f, strct_node)
     elif t == DataType.RID:
