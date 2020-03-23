@@ -190,9 +190,9 @@ type = unpack('I', f.read(4))[0]
 format = Format(unpack('I', f.read(4))[0])
 width = unpack('I', f.read(4))[0]
 height = unpack('I', f.read(4))[0]
-filter = unpack('I', f.read(4))[0]
 depth = unpack('I', f.read(4))[0]
 mipmap_count = unpack('I', f.read(4))[0]
+filter = unpack('I', f.read(4))[0]
 
 f.seek(4, 1) # Not even mentioned in the meta files, so probably reserved?
 
