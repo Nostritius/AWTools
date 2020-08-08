@@ -18,6 +18,7 @@
 import sys
 import os
 import zlib
+import datetime
 
 from struct import unpack
 
@@ -125,7 +126,11 @@ for i in range(num_files):
     full_name = folders[prev_id] + "/" + name
 
     if magic_id == 0:
-        fbin.seek(8, 1)
+        writetime = unpack(endianness + "Q", fbin.read(8))[0]
+
+        dt = datetime.datetime.utcfromtimestamp((writetime - 116444736000000000) / 10000000)
+        print(dt)
+
 
     nf = open(full_name, "wb")
 
