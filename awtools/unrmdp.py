@@ -25,35 +25,36 @@ from struct import unpack
 fbin = open(sys.argv[1], "rb")
 frmdp = open(sys.argv[2], "rb")
 
-magic_id = unpack('B', fbin.read(1))[0]
+endianness_id = unpack('B', fbin.read(1))[0]
+if endianness_id == 1:
+    endianness = ">"
+else:
+    endianness = "<"
+
+version = unpack('I', fbin.read(4))[0]
 
 root_path_length = 7
 
+num_folders = unpack(endianness + 'I', fbin.read(4))[0]
+num_files = unpack(endianness + 'I', fbin.read(4))[0]
+
 # Alan Wake
-if magic_id == 1:
-    fbin.seek(4, 1)
-
-    num_folders = unpack('>I', fbin.read(4))[0]
-    num_files = unpack('>I', fbin.read(4))[0]
-
+if version == 2:
     name_size = unpack('>I', fbin.read(4))[0]
 
-    endianness = ">"
-
 # Alan Wakes American Nightmare
-elif magic_id == 0:
-    root_path_length = unpack('I', fbin.read(4))[0]
-
-    num_folders = unpack('I', fbin.read(4))[0]
-    num_files = unpack('I', fbin.read(4))[0]
-
+elif version == 7:
     fbin.seek(8, 1)
 
     name_size = unpack('I', fbin.read(4))[0]
 
-    endianness = "<"
+# Quantum Break
+elif version == 8:
+    fbin.seek(8, 1)
 
-fbin.seek(root_path_length + 1, 1)
+    name_size = unpack('I', fbin.read(4))[0]
+
+fbin.seek(8, 1)
 fbin.seek(120, 1)
 
 folderNames = []
@@ -79,14 +80,25 @@ def get_name(f, name_offset):
 
 for i in range(num_folders):
     crc = unpack(endianness + 'I', fbin.read(4))[0]
-    next_neighbour_folder_id = unpack(endianness + 'I', fbin.read(4))[0]
-    prev_id = unpack(endianness + 'I', fbin.read(4))[0]
-    fbin.seek(4, 1)
-    name_offset = unpack(endianness + 'I', fbin.read(4))[0]
-    next_lower_folder_id = unpack(endianness + 'I', fbin.read(4))[0]
-    next_file_id = unpack(endianness + 'I', fbin.read(4))[0]
+    if version == 8:
+        next_neighbour_folder_id = unpack(endianness + 'Q', fbin.read(8))[0]
+        prev_id = unpack(endianness + 'Q', fbin.read(8))[0]
+    else:
+        next_neighbour_folder_id = unpack(endianness + 'I', fbin.read(4))[0]
+        prev_id = unpack(endianness + 'I', fbin.read(4))[0]
 
-    if name_offset != 0xFFFFFFFF:
+    fbin.seek(4, 1)
+
+    if version == 8:
+        name_offset = unpack(endianness + 'Q', fbin.read(8))[0]
+        next_lower_folder_id = unpack(endianness + 'Q', fbin.read(8))[0]
+        next_file_id = unpack(endianness + 'Q', fbin.read(8))[0]
+    else:
+        name_offset = unpack(endianness + 'I', fbin.read(4))[0]
+        next_lower_folder_id = unpack(endianness + 'I', fbin.read(4))[0]
+        next_file_id = unpack(endianness + 'I', fbin.read(4))[0]
+
+    if name_offset != 0xFFFFFFFF and name_offset != 0xFFFFFFFFFFFFFFFF:
         folderName = get_name(fbin, name_offset)
     else:
         folderName = ""
@@ -100,7 +112,7 @@ for i in range(num_folders):
 for i in range(num_folders):
     name = folderNames[i]
     prev_id = prevIds[i]
-    while prev_id != 0xFFFFFFFF:
+    while prev_id != 0xFFFFFFFF and prev_id != 0xFFFFFFFFFFFFFFFF:
         if folderNames[prev_id] != "":
             name = folderNames[prev_id] + "/" + name
         prev_id = prevIds[prev_id]
@@ -114,10 +126,18 @@ pos = fbin.tell()
 
 for i in range(num_files):
     name_crc = unpack(endianness + 'I', fbin.read(4))[0]
-    next_neighbour_file_id = unpack(endianness + 'I', fbin.read(4))[0]
-    prev_id = unpack(endianness + 'I', fbin.read(4))[0]
-    flags = unpack(endianness + 'I', fbin.read(4))[0]
-    name_offset = unpack(endianness + 'I', fbin.read(4))[0]
+
+    if version == 8:
+        next_neighbour_file_id = unpack(endianness + 'Q', fbin.read(8))[0]
+        prev_id = unpack(endianness + 'Q', fbin.read(8))[0]
+        flags = unpack(endianness + 'I', fbin.read(4))[0]
+        name_offset = unpack(endianness + 'Q', fbin.read(8))[0]
+    else:
+        next_neighbour_file_id = unpack(endianness + 'I', fbin.read(4))[0]
+        prev_id = unpack(endianness + 'I', fbin.read(4))[0]
+        flags = unpack(endianness + 'I', fbin.read(4))[0]
+        name_offset = unpack(endianness + 'I', fbin.read(4))[0]
+
     offset = unpack(endianness + 'Q', fbin.read(8))[0]
     size = unpack(endianness + 'Q', fbin.read(8))[0]
     file_data_crc = unpack('<I', fbin.read(4))[0]
@@ -125,7 +145,7 @@ for i in range(num_files):
     name = get_name(fbin, name_offset)
     full_name = folders[prev_id] + "/" + name
 
-    if magic_id == 0:
+    if version >= 7:
         writetime = unpack(endianness + "Q", fbin.read(8))[0]
 
         dt = datetime.datetime.utcfromtimestamp((writetime - 116444736000000000) / 10000000)
