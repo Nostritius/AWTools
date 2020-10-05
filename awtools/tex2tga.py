@@ -196,7 +196,15 @@ filter = unpack('I', f.read(4))[0]
 
 f.seek(4, 1) # Not even mentioned in the meta files, so probably reserved?
 
-image_data = f.read(width * height * 4)
+if type == 2:
+    d = io.BytesIO()
+    for i in range(6):
+        d.write(f.read(width * height * 4))
+
+    image_data = d.getbuffer()
+    height *= 6
+else:
+    image_data = f.read(width * height * 4)
 
 if format == Format.RGBA_DXT1:
     image_data = decompressDXT1(image_data, width, height)
