@@ -28,18 +28,18 @@ root_node = ET.Element("binfnt")
 magic_id = unpack('I', f.read(4))[0]
 
 num_glyphs = unpack('I', f.read(4))[0]
-glyph_node = ET.SubElement(root_node, "glyphs")
+glyph_node = ET.SubElement(root_node, "glyph_coordinates")
 
 for i in range(num_glyphs):
-    minx = str(unpack('f', f.read(4))[0])
-    maxx = str(unpack('f', f.read(4))[0])
-    miny = str(unpack('f', f.read(4))[0])
-    maxy = str(unpack('f', f.read(4))[0])
+    vertex_x = str(unpack('f', f.read(4))[0])
+    vertex_y = str(unpack('f', f.read(4))[0])
+    s = str(unpack('f', f.read(4))[0])
+    t = str(unpack('f', f.read(4))[0])
 
     ET.SubElement(
         glyph_node,
-        "glyph",
-        {"minx": minx, "miny": miny, "maxx": maxx, "maxy": maxy}
+        "glyph_coordinate",
+        {"x": vertex_x, "y": vertex_y, "s": s, "t": t}
     )
 
 num_indexes = unpack('I', f.read(4))[0]
@@ -48,12 +48,24 @@ for i in range(num_indexes):
     index = str(unpack('H', f.read(2))[0])
     ET.SubElement(indices_node, "index", {"index": index})
 
-f.seek(num_indexes * 2, 1)
-
 num_glyphs2 = unpack('I', f.read(4))[0]
+glyph_node = ET.SubElement(root_node, "glyphs")
+for i in range(num_glyphs2):
+    vertex_offset = str(unpack('H', f.read(2))[0])
+    vertex_count = str(unpack('H', f.read(2))[0])
+    index_offset = str(unpack('H', f.read(2))[0])
+    index_count = str(unpack('H', f.read(2))[0])
 
-f.seek(num_glyphs2 * 44, 1)
+    ET.SubElement(glyph_node, "glyph", {
+        "vertex_offset": vertex_offset,
+        "vertex_count": vertex_count,
+        "index_offset": index_offset,
+        "index_count": index_count,
+    })
 
+    f.seek(36, 1)
+
+# Character list
 f.seek(0x20000, 1)
 
 print(minidom.parseString(ET.tostring(root_node)).toprettyxml(indent="\t"))
