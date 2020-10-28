@@ -31,10 +31,13 @@ class Type(enum.Enum):
 
 class Format(enum.Enum):
     RGBA8_LUT = 0
+    GRAYSCALE_4BIT = 1  # Potentially swizzled?
+    RGBA_CUBE_DXT1 = 4
     RGBA_DXT1 = 5
     RGBA8 = 6
     RGBA_DXT3 = 7
     RGBA_DXT5 = 9
+    RGBA8_CUBE = 11
 
 class Color:
     r = 0
