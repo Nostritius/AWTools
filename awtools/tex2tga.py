@@ -22,6 +22,13 @@ import copy
 
 from struct import unpack, pack
 
+
+class Type(enum.Enum):
+    Texture2D = 0
+    Texture3D = 1  # ?
+    TextureCubemap = 2
+
+
 class Format(enum.Enum):
     RGBA8_LUT = 0
     RGBA_DXT1 = 5
