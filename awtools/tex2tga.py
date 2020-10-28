@@ -190,7 +190,7 @@ type = unpack('I', f.read(4))[0]
 format = Format(unpack('I', f.read(4))[0])
 width = unpack('I', f.read(4))[0]
 height = unpack('I', f.read(4))[0]
-depth = unpack('I', f.read(4))[0]
+depth = unpack('I', f.read(4))[0]  # Not pixel depth, but rather depth in 3 dimensional textures
 mipmap_count = unpack('I', f.read(4))[0]
 filter = unpack('I', f.read(4))[0]
 
