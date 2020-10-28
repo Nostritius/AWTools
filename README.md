@@ -21,6 +21,7 @@ The following tools are available:
 * xml2string_table.py pack a string table back together
 * roadmap2xml.py translate a cid_roadmap.bin file to a readable xml file
 * disasm.py disassembles bytecode given by dp_bytecode.bin and dp_bytecodeparams.bin
+* dp2xml.py convert a dp file to xml
 
 The tools are currently mostly tested against Alan Wakes American Nightmare. While some of them like unrmdp or unbin
 also work with the original Alan Wake.
