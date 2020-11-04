@@ -42,11 +42,17 @@ num_files = unpack(endianness + 'I', fbin.read(4))[0]
 if version == 2:
     name_size = unpack('>I', fbin.read(4))[0]
 
+    fbin.seek(8, 1)
+    fbin.seek(120, 1)
+
 # Alan Wakes American Nightmare
 elif version == 7:
     fbin.seek(8, 1)
 
     name_size = unpack('I', fbin.read(4))[0]
+
+    fbin.seek(8, 1)
+    fbin.seek(120, 1)
 
 # Quantum Break
 elif version == 8:
@@ -54,8 +60,16 @@ elif version == 8:
 
     name_size = unpack('I', fbin.read(4))[0]
 
-fbin.seek(8, 1)
-fbin.seek(120, 1)
+    fbin.seek(8, 1)
+    fbin.seek(120, 1)
+
+# Control
+elif version == 9:
+    fbin.seek(8, 1)
+
+    name_size = unpack('I', fbin.read(4))[0]
+
+    fbin.seek(128, 1)
 
 folderNames = []
 folders = []
@@ -80,7 +94,7 @@ def get_name(f, name_offset):
 
 for i in range(num_folders):
     crc = unpack(endianness + 'I', fbin.read(4))[0]
-    if version == 8:
+    if version >= 8:
         next_neighbour_folder_id = unpack(endianness + 'Q', fbin.read(8))[0]
         prev_id = unpack(endianness + 'Q', fbin.read(8))[0]
     else:
@@ -89,7 +103,7 @@ for i in range(num_folders):
 
     fbin.seek(4, 1)
 
-    if version == 8:
+    if version >= 8:
         name_offset = unpack(endianness + 'Q', fbin.read(8))[0]
         next_lower_folder_id = unpack(endianness + 'Q', fbin.read(8))[0]
         next_file_id = unpack(endianness + 'Q', fbin.read(8))[0]
@@ -103,7 +117,7 @@ for i in range(num_folders):
     else:
         folderName = ""
 
-    if zlib.crc32(bytearray(folderName, "ascii")) != crc:
+    if zlib.crc32(bytearray(folderName.lower(), "ascii")) != crc:
         raise Exception("Invalid folder name crc checksum")
 
     folderNames.append(folderName)
@@ -127,7 +141,7 @@ pos = fbin.tell()
 for i in range(num_files):
     name_crc = unpack(endianness + 'I', fbin.read(4))[0]
 
-    if version == 8:
+    if version >= 8:
         next_neighbour_file_id = unpack(endianness + 'Q', fbin.read(8))[0]
         prev_id = unpack(endianness + 'Q', fbin.read(8))[0]
         flags = unpack(endianness + 'I', fbin.read(4))[0]
