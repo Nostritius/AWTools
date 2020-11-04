@@ -22,6 +22,7 @@ The following tools are available:
 * roadmap2xml.py translate a cid_roadmap.bin file to a readable xml file
 * disasm.py disassembles bytecode given by dp_bytecode.bin and dp_bytecodeparams.bin
 * dp2xml.py convert a dp file to xml
+* unrmdl.py unpack rmdl bin files used by Control
 
 The tools are currently mostly tested against Alan Wakes American Nightmare. While some of them like unrmdp or unbin
 also work with the original Alan Wake.
