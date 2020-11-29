@@ -47,6 +47,7 @@ for i in range(int(num_indices / 3)):
     faces.append((a, b, c))
 
 # Polygon Types?
+# Material Types? For Mat dependent sound?
 for i in range(int(num_indices / 3)):
     face_types.append(unpack('B', f.read(1))[0])
 
