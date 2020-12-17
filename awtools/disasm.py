@@ -125,6 +125,12 @@ while fbytecode.tell() < dataSize + code_start:
     elif op == 26: # jmp_if
         offset = unpack("I", fbytecode.read(4))[0]
         f.write("jmp_if " + str(offset) + "\n")
+    elif op == 28:  # and
+        f.write("and\n")
+    elif op == 29:  # or
+        f.write("or\n")
+    elif op == 30:  # not
+        f.write("not\n")
     elif op == 36: # neg
         f.write("neg\n")
     else:
