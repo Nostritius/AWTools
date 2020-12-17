@@ -19,7 +19,7 @@ Opcode | Command
 0x09   | mul_int (?)
 0x0b   | ??
 0x0c   | ?? (Some comparison?)
-0x0d   | ret (?)
+0x0d   | ret
 0x0e   | int_to_float
 0x0f   | set_member_by_id (?)
 0x10   | get_member_by_id (?)
