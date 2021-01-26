@@ -31,7 +31,7 @@ if endianness_id == 1:
 else:
     endianness = "<"
 
-version = unpack('I', fbin.read(4))[0]
+version = unpack(endianness + 'I', fbin.read(4))[0]
 
 root_path_length = 7
 
