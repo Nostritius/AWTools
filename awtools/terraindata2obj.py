@@ -34,15 +34,18 @@ indices = []
 
 if not no_tile_names:
     num_tile_files = unpack('I', f.read(4))[0]
+
+    # Tile textures
     for i in range(num_tile_files):
         tile_file_name_length = unpack('I', f.read(4))[0]
         tile_file_name = unpack('<' + str(tile_file_name_length) + 's', f.read(tile_file_name_length))[0].decode('ascii')
         tile_file_name.replace('\0', '')
         print(tile_file_name)
 
-    # ??
+    # Color and Normal Tilesets
     num_indices = unpack('I', f.read(4))[0]
     for i in range(num_indices):
+        # 3 Color map and 3 Normal map indices
         f.seek(2*6, 1)
 
     # Vertices
@@ -51,7 +54,7 @@ if not no_tile_names:
         positions.append(unpack("fff", f.read(12)))
         nx, ny, nz = unpack('hhh', f.read(6))
         normals.append((nx / 32767.0, ny / 32767.0, nz / 32767.0))
-        f.seek(2, 1)
+        f.seek(2, 1)  # Displacement Factor
 
     # Polygons
     num_polygons = unpack('I', f.read(4))[0]
@@ -66,6 +69,7 @@ if not no_tile_names:
 
         f.seek(0x40 + 0x48, 1)
 
+        # Terrain tile Bounding Sphere
         x, y, z = unpack('fff', f.read(12))
         radius = unpack('f', f.read(4))[0]
 
