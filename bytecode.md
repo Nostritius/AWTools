@@ -19,16 +19,16 @@ Opcode | Command
 0x09   | mul_int (?)
 0x0b   | ??
 0x0c   | ?? (Some comparison?)
-0x0d   | ret (?)
+0x0d   | ret
 0x0e   | int_to_float
 0x0f   | set_member_by_id (?)
 0x10   | get_member_by_id (?)
 0x13   | cmp
 0x15   | jmp
 0x1a   | jmp_if
-0x1c   | ??
-0x1d   | ??
-0x1e   | ??
+0x1c   | and
+0x1d   | or
+0x1e   | not
 0x20   | ??
 0x23   | ??
 0x24   | neg (?) (bool_to_int??)

@@ -12,7 +12,9 @@ The following tools are available:
 * unobj.py unpack obj shader archives
 * rmdp.py pack rmdp/bin archive structures
 * bin.py pack bin or resources archives
-* tex2tga convert tex texture to a tga image
+* tex2tga.py convert tex texture to a tga image
+* dds2tex.py convert dds texture to a tex texture
+* tex2dds.py convert tex texture to a dds texture
 * bin2xml.py translate a binary data file to a readable xml file
 * binfnt2xml.py translate a binfnt file to a readable xml file and extract the font texture
 * packmeta2xml.py translate a packmeta file to a readable xml file
